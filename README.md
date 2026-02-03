@@ -150,3 +150,57 @@
 **Subtask**
 
 1. Testing: Jest + React Testing Library.
+
+**rule cơ bản của ESLint**
+
+- Syntax & Code Quality :
+
+1. no-unused-vars: lỗi khai báo biến nhưng ko sử dụng
+2. no-console: cảnh báo khi dùng console.log(dùng ở production)
+3. no-undef : lỗi sử dụng biến chưa khai báo
+4. no-const-assign : lỗi khi thay đổi giá trị biến 'const'
+
+- Formatting & Style :
+
+1. quotes : thống nhất sử dụng ('') hoặc ("")
+2. semi : yêu cầu hoặc cấm sử dụng dấu chấm phẩy ở cuối dòng
+3. comma-dangle : quy định dấu phẩy cuối cùng trong object, array
+4. indent : số lượng khoảng trắng thụt lề (2 hoặc 4 spaces)
+
+- Recommend rule :
+
+1. no-var : khuyến khích sử dụng let hoặc const thay vì var
+2. prefer-const : ưu tiên sử dụng const nếu biến ko bị thay đổi
+3. curly : yêu cầu dấu ngoặc nhọn ({}) cho các câu lệnh rẽ nhánh
+
+**rule cơ bản của Prettier**
+
+1. indent : mặc định sử dụng 2 khoảng trắng để thụt lề , ko dùng tab
+2. quotes : ưu tiên dùng ('') thay vì ("") cho strings
+3. semi : tự động thêm dấu chấm phẩy ở cuối câu
+4. comma-dangle : sử dụng dấu phẩy ở cuối object, array : (trailingComma: all)
+5. bracket-spacing thêm khoảng trắng trong dấu ngoặc nhọn : (bracketSpacing: true)
+6. arrowParens : tránh sử dụng () khi dùng arrow func chỉ có 1 tham số
+7. line width : xuống dòng khi code vượt quá độ dài quy định
+
+**các bước tạo pre-commit**
+
+1. cài husky : npm i husky -D
+2. tạo thư mục .husky : npx husky init
+3. cài lint-staged để format/lint file trước commit : npm install lint-staged --save-dev, sau đó thêm vào package.json :
+   {
+   "lint-staged": {
+   "\*.{js,ts,jsx,tsx}": [
+   "eslint --fix",
+   "prettier --write"
+   ]
+   }
+   }
+4. sửa file pre-commit :
+
+#!/usr/bin/env sh
+. "$(dirname "$0")/\_/husky.sh"
+
+npx lint-staged
+
+5. commit test hoạt động
