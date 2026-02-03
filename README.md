@@ -185,22 +185,20 @@
 
 **các bước tạo pre-commit**
 
-1. cài husky : npm i husky -D
-2. tạo thư mục .husky : npx husky init
-3. cài lint-staged để format/lint file trước commit : npm install lint-staged --save-dev, sau đó thêm vào package.json :
-   {
-   "lint-staged": {
-   "\*.{js,ts,jsx,tsx}": [
-   "eslint --fix",
-   "prettier --write"
-   ]
-   }
-   }
-4. sửa file pre-commit :
-
-#!/usr/bin/env sh
-. "$(dirname "$0")/\_/husky.sh"
+1. cài dependencies : npm install -D husky lint-staged eslint prettier
+2. tạo thư mục .husky
+3. tạo pre-commit hook : file .husky/pre-commit :
+   #!/bin/bash
+   . "$(dirname "$0")/\_/husky.sh"
 
 npx lint-staged
 
-5. commit test hoạt động
+4. cài lint-staged để format/lint file trước commit : npm install lint-staged --save-dev, sau đó thêm vào package.json :
+   {
+   "lint-staged": {
+   "\*_/_.{js,jsx,ts,tsx}": [
+   "eslint --max-warnings=0 --",
+   "prettier --write"
+   ]
+   }
+   } 5. test eslint
