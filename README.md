@@ -194,11 +194,44 @@
 npx lint-staged
 
 4. cài lint-staged để format/lint file trước commit : npm install lint-staged --save-dev, sau đó thêm vào package.json :
-   {
+
    "lint-staged": {
    "\*_/_.{js,jsx,ts,tsx}": [
    "eslint --max-warnings=0 --",
    "prettier --write"
    ]
+
    }
-   } 5. test eslint
+
+5. tạo folder \_ trong .husky, tạo file husky.sh background#!/bin/bash
+
+if [ -z "$husky_skip_init" ]; then
+debug () {
+[ "$HUSKY_DEBUG" = "1" ] && echo "husky (debug) - $1"
+}
+
+readonly hook_name="$(basename "$0")"
+debug "starting $hook_name..."
+
+if [ "$HUSKY" = "0" ]; then
+debug "HUSKY env variable is set to 0, skipping hook"
+exit 0
+fi
+
+if [ -f "$HOME/.huskyrc" ]; then
+debug "sourcing ~/.huskyrc"
+. "$HOME/.huskyrc"
+fi
+
+export husky_skip_init=1
+bash "$0" "$@"
+exitCode="$?"
+
+if [ $exitCode -ne 0 ]; then
+echo "husky - $hook_name hook exited with code $exitCode"
+fi
+
+exit $exitCode
+fi
+
+6. test eslint
