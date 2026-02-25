@@ -2185,7 +2185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^9, eslint@npm:^9.39.2":
+"eslint@npm:^9.39.2":
   version: 9.39.3
   resolution: "eslint@npm:9.39.3"
   dependencies:
@@ -2966,11 +2966,6 @@ __metadata:
 "javascript@workspace:javascript":
   version: 0.0.0-use.local
   resolution: "javascript@workspace:javascript"
-  dependencies:
-    eslint: ^9.39.2
-    husky: ^9.1.7
-    lint-staged: ^16.2.7
-    prettier: ^3.8.1
   languageName: unknown
   linkType: soft
 
@@ -3470,7 +3465,6 @@ __metadata:
     "@types/node": ^20
     "@types/react": ^19
     "@types/react-dom": ^19
-    eslint: ^9
     eslint-config-next: 16.1.6
     next: 16.1.6
     react: 19.2.3
