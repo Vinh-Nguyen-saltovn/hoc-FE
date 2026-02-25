@@ -1,4 +1,5 @@
 export default [
+  { ignores: ['**/.next/**', 'nextjs/**'] },
   {
     files: ['**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx'],
     languageOptions: {

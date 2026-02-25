@@ -2,13 +2,21 @@
   "name": "hoc-fe",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "javascript",
+    "nextjs"
+  ],
   "scripts": {
     "lint": "eslint .",
     "format": "prettier --write ."
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "eslint --config eslint.config.js --max-warnings=0 --",
+    "javascript/**/*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0",
+      "prettier --write"
+    ],
+    "./*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0",
       "prettier --write"
     ]
   },
@@ -17,5 +25,6 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1"
-  }
+  },
+  "type": "module"
 }
