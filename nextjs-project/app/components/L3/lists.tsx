@@ -27,13 +27,13 @@ export default function PostsForm({ data }: PostFormProps) {
             <section className="d-flex justify-between w-full">
               <p>Day</p>
               <div className="space-x-4 text-sm font-medium">
-                <button className="text-blue-600 hover:underline cursor-pointer text-lg">
-                  View
-                </button>
-                <button className="text-yellow-600 hover:underline cursor-pointer text-lg">
+                <Link
+                  href={`/posts/${post.id}`}
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-yellow-600 transition"
+                >
                   Edit
-                </button>
-                <button className="text-red-600 hover:underline cursor-pointer text-lg">
+                </Link>
+                <button className="bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition">
                   Delete
                 </button>
               </div>
