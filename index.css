@@ -1,0 +1,29 @@
+body {
+  background-image: linear-gradient(blue, purple);
+}
+.background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.title {
+  color: white;
+  font-size: 100px;
+}
+
+.main-button {
+  background-image: linear-gradient(red, orange);
+  height: 80px;
+  width: 200px;
+  color: white;
+  font-size: 48px;
+  transition: transform 0.2s ease-in-out;
+  border: none;
+}
+
+.main-button:hover {
+  transform: translate(0, -10px);
+}
