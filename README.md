@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+
+# hoc-FE
+
+=======
+
 # hoc-FE :
 
 ## Phase 0 : Onboarding & Tooling
