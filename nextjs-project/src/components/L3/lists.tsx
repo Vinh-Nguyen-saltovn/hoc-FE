@@ -9,7 +9,11 @@ export default function PostsForm({ data }: PostFormProps) {
     <div className="space-y-8">
       <section className="d-flex justify-between">
         <h1 className="text-2xl font-bold">All Posts</h1>
-        <CommonDirectButton href="/posts/add" color="blue" title="+ New Post" />
+        <CommonDirectButton
+          href="/posts/add-new"
+          color="blue"
+          title="+ New Post"
+        />
       </section>
       <section className="space-y-5">
         {data.map(post => (

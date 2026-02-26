@@ -1,6 +1,6 @@
 export interface Posts {
-  id: number
+  id?: number
   title: string
   content: string
-  createdAt: string
+  createdAt: string | null
 }
