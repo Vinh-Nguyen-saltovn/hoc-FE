@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+@utility d-flex {
+  @apply flex justify-center items-center;
+}
