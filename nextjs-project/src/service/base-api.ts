@@ -18,7 +18,7 @@ export async function fetchData<T>(
   return res.json()
 }
 
-export async function fetchUpdateData<T>(url: string, body = {}): Promise<T> {
+export async function fetchPostData<T>(url: string, body = {}): Promise<T> {
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -29,6 +29,21 @@ export async function fetchUpdateData<T>(url: string, body = {}): Promise<T> {
 
   if (!res.ok) {
     throw new Error(`POST ${url} failed ${res.status}`)
+  }
+  return res.json()
+}
+
+export async function fetchUpdateData<T>(url: string, body = {}): Promise<T> {
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (!res.ok) {
+    throw new Error(`PUT ${url} failed ${res.status}`)
   }
   return res.json()
 }

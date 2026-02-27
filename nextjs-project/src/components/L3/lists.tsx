@@ -7,13 +7,8 @@ interface PostFormProps {
 export default function PostsForm({ data }: PostFormProps) {
   return (
     <div className="space-y-8">
-      <section className="d-flex justify-between">
-        <h1 className="text-2xl font-bold">All Posts</h1>
-        <CommonDirectButton
-          href="/posts/add-new"
-          color="blue"
-          title="+ New Post"
-        />
+      <section className="d-flex w-full bg-white rounded-xl p-3">
+        <h1 className="text-4xl font-bold">All Posts</h1>
       </section>
       <section className="space-y-5">
         {data.map(post => (

@@ -1,6 +1,6 @@
 'use server'
 
-import { fetchData, fetchUpdateData } from '../service/base-api'
+import { fetchData, fetchPostData, fetchUpdateData } from '../service/base-api'
 import { Posts } from '../types/posts'
 
 export async function fetchPostsList(): Promise<Posts[]> {
@@ -8,5 +8,13 @@ export async function fetchPostsList(): Promise<Posts[]> {
 }
 
 export async function fetchAddNewPost(data: Posts): Promise<Posts> {
-  return fetchUpdateData('http://localhost:3001/posts', data)
+  return fetchPostData('http://localhost:3001/posts', data)
+}
+
+export async function fetchPostWithId(id: string): Promise<Posts> {
+  return fetchData(`http://localhost:3001/posts/${id}`)
+}
+
+export async function fetchUpdatePost(id: string, data: Posts): Promise<Posts> {
+  return fetchUpdateData(`http://localhost:3001/posts/${id}`, data)
 }
