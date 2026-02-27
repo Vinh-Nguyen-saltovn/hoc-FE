@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Link from 'next/link'
-import { CommonDirectButton } from '../components/L2/buttons/buttons'
+
+import ToastProvider from '../components/toast/ToastProvider'
+import Header from '../components/layouts/Header'
+import Footer from '../components/layouts/Footer'
 
 export const metadata: Metadata = {
   title: 'My Mini Blog App',
@@ -16,20 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-300">
-        <header className="bg-white shadow-sm">
-          <div className="max-w-6xl mx-auto p-4 flex justify-between">
-            <Link href="/" className="font-bold text-xl">
-              Mini Blog App
-            </Link>
-            <nav className="flex gap-4">
-              <CommonDirectButton href="/posts/add" title="+ New Post" />
-            </nav>
-          </div>
-        </header>
-        <main className="max-w-4xl mx-auto p-6 my-12">{children}</main>
-        <footer className="bg-white w-full text-center text-gray-500 text-sm fixed bottom-0 p-3">
-          © 2026 Mini Blog App
-        </footer>
+        <Header />
+        <main className="max-w-4xl mx-auto p-6 mb-10">
+          {children}
+          <ToastProvider />
+        </main>
+        <Footer />
       </body>
     </html>
   )

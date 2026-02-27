@@ -24,7 +24,7 @@ export function CommonDirectButton({
   return (
     <Link
       href={href}
-      className={`${buttonColor[color]} text-white px-4 py-2 rounded-lg transition ${classNames}`}
+      className={`${buttonColor[color]} text-white px-4 py-2 rounded-lg transition cursor-pointer ${classNames}`}
     >
       {title}
     </Link>
@@ -40,7 +40,7 @@ export function CommonSubmitButton({
   return (
     <button
       onClick={onClick}
-      className={`${buttonColor[color]} text-white px-4 py-2 rounded-lg transition ${classNames}`}
+      className={`${buttonColor[color]} text-white px-4 py-2 rounded-lg transition cursor-pointer ${classNames}`}
     >
       {title}
     </button>
