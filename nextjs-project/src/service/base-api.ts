@@ -47,3 +47,13 @@ export async function fetchUpdateData<T>(url: string, body = {}): Promise<T> {
   }
   return res.json()
 }
+
+export async function fetchDeleteData<T>(url: string): Promise<T> {
+  const res = await fetch(url, {
+    method: 'DELETE',
+  })
+  if (!res.ok) {
+    throw new Error(`DELETE ${url} failed ${res.status}`)
+  }
+  return res.json()
+}

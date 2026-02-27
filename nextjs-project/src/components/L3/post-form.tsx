@@ -17,6 +17,7 @@ import {
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import { Posts } from '@/src/types/posts'
+import { delay, LoadingSpinner } from '../L2/loading/loading'
 
 export default function PostForm({ id }: { id?: string }) {
   const router = useRouter()
@@ -29,6 +30,7 @@ export default function PostForm({ id }: { id?: string }) {
     date: '',
   })
   const [originalPost, setOriginalPost] = useState<Posts | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const isEditMode = !!id
 
@@ -84,8 +86,10 @@ export default function PostForm({ id }: { id?: string }) {
     }
 
     try {
+      setIsLoading(true)
       // nếu là edit
       if (isEditMode && originalPost) {
+        await delay(1000)
         // check giá trị fetch khi vào edit và giá trị của các ô input
         const checkDiff =
           originalPost.title.trim() === newPost.title.trim() &&
@@ -99,18 +103,22 @@ export default function PostForm({ id }: { id?: string }) {
         } else {
           // nếu có, update
           await fetchUpdatePost(id, newPost)
-          console.log(newPost)
           toast.success('Cập nhật thành công')
         }
       } else {
         // nếu ko phải edit thì add
+        await delay(1000)
         await fetchAddNewPost(newPost)
         toast.success('Thêm mới thành công')
       }
       router.push('/posts')
     } catch (error) {
-      toast.error('Thất bại')
+      await delay(1000)
+      if (isEditMode) toast.error('Cập nhật thất bại')
+      else toast.error('Thêm mới thất bại')
       console.error('Error:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -162,10 +170,11 @@ export default function PostForm({ id }: { id?: string }) {
       <section className="d-flex">
         <CommonSubmitButton
           title={`${isEditMode ? 'Update' : 'Create'}`}
-          color="blue"
+          color={`${isEditMode ? 'yellow' : 'blue'}`}
           classNames="h-12 w-40 text-2xl"
         />
       </section>
+      <LoadingSpinner isLoading={isLoading} />
     </form>
   )
 }
