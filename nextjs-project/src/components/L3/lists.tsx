@@ -1,19 +1,23 @@
+'use client'
+
 import { Posts } from '@/src/types/posts'
-import { CommonDirectButton, CommonSubmitButton } from '../L2/buttons/buttons'
+import { CommonDirectButton } from '../L2/buttons/buttons'
+import { useState } from 'react'
+import DeleteModal from '../L1/modals/delete-modal'
+import { LoadingSpinner } from '../L2/loading/loading'
 
 interface PostFormProps {
   data: Posts[]
 }
 export default function PostsForm({ data }: PostFormProps) {
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
+  const [selectedPostId, setSelectedPostId] = useState<string>('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   return (
     <div className="space-y-8">
-      <section className="d-flex justify-between">
-        <h1 className="text-2xl font-bold">All Posts</h1>
-        <CommonDirectButton
-          href="/posts/add-new"
-          color="blue"
-          title="+ New Post"
-        />
+      <section className="d-flex w-full bg-white rounded-xl p-3">
+        <h1 className="text-4xl font-bold">All Posts</h1>
       </section>
       <section className="space-y-5">
         {data.map(post => (
@@ -31,11 +35,26 @@ export default function PostsForm({ data }: PostFormProps) {
                   title="Edit"
                   color="yellow"
                 />
-                <CommonSubmitButton title="Delete" />
+                <button
+                  onClick={() => {
+                    setSelectedPostId(post.id as string)
+                    setShowDeleteModal(true)
+                  }}
+                  className="text-white px-4 py-2 rounded-lg transition cursor-pointer bg-red-500 hover:bg-red-600"
+                >
+                  Delete
+                </button>
               </div>
             </section>
           </section>
         ))}
+        <DeleteModal
+          openModal={showDeleteModal}
+          setOpenModal={setShowDeleteModal}
+          postId={selectedPostId}
+          setIsLoading={setIsLoading}
+        />
+        <LoadingSpinner isLoading={isLoading} />
       </section>
     </div>
   )

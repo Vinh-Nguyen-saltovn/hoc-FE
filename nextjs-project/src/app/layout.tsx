@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
-import ToastProvider from '../components/toast/ToastProvider'
+import ToastProvider from '../components/L2/toast/ToastProvider'
 import Header from '../components/layouts/Header'
 import Footer from '../components/layouts/Footer'
 

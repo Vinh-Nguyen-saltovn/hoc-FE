@@ -1,5 +1,5 @@
-import AddNewForm from '../L3/add-new'
+import PostForm from '../L3/post-form'
 
 export default async function AddNewPage() {
-  return <AddNewForm />
+  return <PostForm />
 }
