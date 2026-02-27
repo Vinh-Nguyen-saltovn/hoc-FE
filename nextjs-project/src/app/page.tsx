@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { CommonDirectButton } from '../components/L2/buttons/buttons'
 
 export default function Home() {
   return (
@@ -8,12 +8,7 @@ export default function Home() {
         Simple CRUD blog built with Next.js + json-server
       </p>
 
-      <Link
-        href="/posts"
-        className="inline-block bg-blue-500 text-white px-6 py-2 rounded"
-      >
-        Go to Posts
-      </Link>
+      <CommonDirectButton href="/posts" title="Go to Posts List" />
     </div>
   )
 }
