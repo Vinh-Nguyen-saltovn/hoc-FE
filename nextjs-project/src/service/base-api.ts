@@ -1,59 +1,80 @@
+export type FetchResult<T> = T | Response | void
+
 export async function fetchData<T>(
   url: string,
   headers: HeadersInit = {},
-): Promise<T> {
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-    },
-    cache: 'no-store',
-  })
+): Promise<FetchResult<T>> {
+  try {
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+      cache: 'no-cache',
+    })
 
-  if (!res.ok) {
-    throw new Error(`GET ${url} failed ${res.status}`)
+    if (!res.ok) {
+      throw new Error(`GET ${url} failed ${res.status}`)
+    }
+
+    // check nếu 204 No Content
+    if (res.status === 204) {
+      return
+    }
+
+    // nếu api ko phải Json -> trả về res
+    const contentType = res.headers.get('Content-Type') ?? ''
+    if (!contentType.includes('application/json')) {
+      return res
+    }
+    try {
+      // parse json, nếu lỗi trả về void
+      return await res.json()
+    } catch {
+      return res
+    }
+  } catch (error) {
+    throw error
   }
-
-  return res.json()
 }
 
-export async function fetchPostData<T>(url: string, body = {}): Promise<T> {
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
+export async function fetchUpdateData<T>(
+  url: string,
+  method: 'POST' | 'PUT' | 'DELETE',
+  body?: object,
+): Promise<FetchResult<T>> {
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    })
 
-  if (!res.ok) {
-    throw new Error(`POST ${url} failed ${res.status}`)
+    if (!res.ok) {
+      throw new Error(`${method} ${url} failed ${res.status}`)
+    }
+
+    // check nếu 204 No Content
+    if (res.status === 204) {
+      return
+    }
+
+    // nếu api ko phải Json | 204 -> trả về res
+    const contentType = res.headers.get('Content-Type') ?? ''
+    if (!contentType.includes('application/json')) {
+      return res
+    }
+
+    try {
+      // parse json, nếu lỗi trả về void
+      return await res.json()
+    } catch {
+      return res
+    }
+  } catch (error) {
+    throw error
   }
-  return res.json()
-}
-
-export async function fetchUpdateData<T>(url: string, body = {}): Promise<T> {
-  const res = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-
-  if (!res.ok) {
-    throw new Error(`PUT ${url} failed ${res.status}`)
-  }
-  return res.json()
-}
-
-export async function fetchDeleteData<T>(url: string): Promise<T> {
-  const res = await fetch(url, {
-    method: 'DELETE',
-  })
-  if (!res.ok) {
-    throw new Error(`DELETE ${url} failed ${res.status}`)
-  }
-  return res.json()
 }

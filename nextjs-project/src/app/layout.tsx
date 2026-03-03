@@ -4,6 +4,8 @@ import './globals.css'
 import ToastProvider from '../components/L2/toast/ToastProvider'
 import Header from '../components/layouts/Header'
 import Footer from '../components/layouts/Footer'
+import { LoadingSpinner } from '../components/L2/loading/loading'
+import { LoadingProvider } from '../context/LoadingContext'
 
 export const metadata: Metadata = {
   title: 'My Mini Blog App',
@@ -18,12 +20,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-300">
-        <Header />
-        <main className="max-w-4xl mx-auto p-6 mb-10">
-          {children}
-          <ToastProvider />
-        </main>
-        <Footer />
+        <LoadingProvider>
+          <Header />
+          <main className="max-w-4xl mx-auto p-6 mb-10">
+            <LoadingSpinner />
+            {children}
+            <ToastProvider />
+          </main>
+          <Footer />
+        </LoadingProvider>
       </body>
     </html>
   )

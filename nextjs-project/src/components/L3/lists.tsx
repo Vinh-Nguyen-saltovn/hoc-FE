@@ -4,15 +4,34 @@ import { Posts } from '@/src/types/posts'
 import { CommonDirectButton } from '../L2/buttons/buttons'
 import { useState } from 'react'
 import DeleteModal from '../L1/modals/delete-modal'
-import { LoadingSpinner } from '../L2/loading/loading'
+import { useLoading } from '@/src/context/LoadingContext'
+import { toast } from 'react-toastify'
+import { fetchDeletePost } from '@/src/actions/posts'
+import { useRouter } from 'next/navigation'
 
-interface PostFormProps {
+interface PostListProps {
   data: Posts[]
 }
-export default function PostsForm({ data }: PostFormProps) {
+export default function PostsList({ data }: PostListProps) {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
   const [selectedPostId, setSelectedPostId] = useState<string>('')
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { setLoading } = useLoading()
+  const router = useRouter()
+
+  async function handleDeletePost() {
+    setLoading(true)
+    try {
+      await fetchDeletePost(selectedPostId)
+      setShowDeleteModal(false)
+      toast.success(`Xóa post có id = ${selectedPostId} thành công`)
+      router.refresh()
+    } catch (error) {
+      toast.error('Xóa post ko thành công')
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -52,9 +71,8 @@ export default function PostsForm({ data }: PostFormProps) {
           openModal={showDeleteModal}
           setOpenModal={setShowDeleteModal}
           postId={selectedPostId}
-          setIsLoading={setIsLoading}
+          onClick={handleDeletePost}
         />
-        <LoadingSpinner isLoading={isLoading} />
       </section>
     </div>
   )
