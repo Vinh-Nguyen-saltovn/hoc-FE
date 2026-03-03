@@ -1,7 +1,14 @@
-import { fetchPostsList } from '@/src/actions/posts'
-import PostsForm from '../L3/lists'
+'use server'
 
-export default async function PostsLists() {
+import { fetchPostsList } from '@/src/actions/posts'
+import PostsList from '../L3/lists'
+
+export default async function Posts() {
   const data = await fetchPostsList()
-  return <PostsForm data={data} />
+
+  if (!data || data instanceof Response) {
+    return <p>Không thể tải danh sách bài viết</p>
+  }
+
+  return <PostsList data={data} />
 }

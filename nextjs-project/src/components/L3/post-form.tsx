@@ -17,32 +17,38 @@ import {
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import { Posts } from '@/src/types/posts'
-import { delay, LoadingSpinner } from '../L2/loading/loading'
+import { useLoading } from '@/src/context/LoadingContext'
+import { postFormSchema, PostFormValues } from '@/src/validations/post.schema'
+import { ZodError } from 'zod'
 
 export default function PostForm({ id }: { id?: string }) {
   const router = useRouter()
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [selectedDate, setSelectedDate] = useState<string>('')
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
-  const [errors, setErrors] = useState({
-    title: '',
-    content: '',
-    date: '',
-  })
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof PostFormValues, string>>
+  >({})
   const [originalPost, setOriginalPost] = useState<Posts | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { setLoading } = useLoading()
 
   const isEditMode = !!id
 
   // load data khi vào edit
   useEffect(() => {
     if (!isEditMode) return
+
     async function LoadData() {
       try {
         const post = await fetchPostWithId(id!)
+        if (!post || post instanceof Response) {
+          router.push('/404')
+          return
+        }
+
         setTitle(post.title)
         setContent(post.content)
-        setSelectedDate(post.createdAt ? new Date(post.createdAt) : null)
+        setSelectedDate(post.createdAt ?? '')
 
         // lưu vào state để check thay đổi
         setOriginalPost({
@@ -50,7 +56,7 @@ export default function PostForm({ id }: { id?: string }) {
           content: post.content,
           createdAt: post.createdAt
             ? format(new Date(post.createdAt), 'yyyy/MM/dd')
-            : null,
+            : '',
         })
       } catch {
         router.push('/404')
@@ -63,33 +69,18 @@ export default function PostForm({ id }: { id?: string }) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    const newErrors = {
-      title: title.trim() ? '' : 'Title is required',
-      content: content.trim() ? '' : 'Content is required',
-      date: selectedDate ? '' : 'Created date is required',
-    }
-
-    setErrors(newErrors)
-
-    if (newErrors.title || newErrors.content || newErrors.date) {
-      return
-    }
-
-    const formattedDate = selectedDate
-      ? format(selectedDate, 'yyyy/MM/dd')
-      : null
-
     const newPost = {
       title,
       content,
-      createdAt: formattedDate,
+      createdAt: selectedDate,
     }
 
     try {
-      setIsLoading(true)
+      setLoading(true)
+      postFormSchema.parse(newPost)
+      setErrors({})
       // nếu là edit
       if (isEditMode && originalPost) {
-        await delay(1000)
         // check giá trị fetch khi vào edit và giá trị của các ô input
         const checkDiff =
           originalPost.title.trim() === newPost.title.trim() &&
@@ -107,18 +98,31 @@ export default function PostForm({ id }: { id?: string }) {
         }
       } else {
         // nếu ko phải edit thì add
-        await delay(1000)
         await fetchAddNewPost(newPost)
         toast.success('Thêm mới thành công')
       }
       router.push('/posts')
     } catch (error) {
-      await delay(1000)
+      if (error instanceof ZodError) {
+        const fieldErrors: Partial<Record<keyof PostFormValues, string>> = {}
+
+        error.issues.forEach(issue => {
+          const field = issue.path[0] as keyof PostFormValues
+          // chỉ lấy message đầu tiên của từng field
+          if (!fieldErrors[field]) {
+            fieldErrors[field] = issue.message
+          }
+        })
+
+        setErrors(fieldErrors)
+        return
+      }
+
       if (isEditMode) toast.error('Cập nhật thất bại')
       else toast.error('Thêm mới thất bại')
       console.error('Error:', error)
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
@@ -158,15 +162,17 @@ export default function PostForm({ id }: { id?: string }) {
       <section className="d-flex justify-start space-x-5">
         <p>Created at : </p>
         <DatePicker
-          selected={selectedDate}
-          onChange={(date: Date | null) => setSelectedDate(date)}
+          selected={selectedDate ? new Date(selectedDate) : null}
+          onChange={(date: Date | null) =>
+            setSelectedDate(date ? format(date, 'yyyy/MM/dd') : '')
+          }
           dateFormat={'yyyy/MM/dd'}
           customInput={<CustomInput />}
           popperPlacement="bottom-start"
           popperProps={{ strategy: 'fixed' }}
         />
       </section>
-      <p className="text-red-500 text-sm">{errors.date}</p>
+      <p className="text-red-500 text-sm">{errors.createdAt}</p>
       <section className="d-flex">
         <CommonSubmitButton
           title={`${isEditMode ? 'Update' : 'Create'}`}
@@ -174,7 +180,6 @@ export default function PostForm({ id }: { id?: string }) {
           classNames="h-12 w-40 text-2xl"
         />
       </section>
-      <LoadingSpinner isLoading={isLoading} />
     </form>
   )
 }
